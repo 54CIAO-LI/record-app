@@ -1,0 +1,316 @@
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="藝文記錄" />
+  <meta name="theme-color" content="#FF7518" />
+  <meta name="description" content="記錄你的文化足跡" />
+
+  <title>YBSG👾</title>
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Apple splash screens (optional, for standalone mode) -->
+  <meta name="mobile-web-app-capable" content="yes" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     SPLASH SCREEN
+══════════════════════════════════════ -->
+<div id="splash">
+  <div class="splash-content">
+    <div class="splash-logo">
+      <span class="splash-icon">🎧</span>
+    </div>
+    <h1 class="splash-name">👾 YBSG 👾</h1>
+<!--     <p class="splash-tagline">記錄你的文化足跡</p> -->
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     APP SHELL
+══════════════════════════════════════ -->
+<div id="app" class="app-hidden">
+
+  <!-- ─── Status Bar Spacer (iOS safe area) ─── -->
+  <div class="status-bar-spacer"></div>
+
+  <!-- ══════ PAGE: HOME ══════ -->
+  <div class="page page-home active" id="pageHome">
+    <div class="nav-bar">
+      <h1 class="nav-title">活動記錄</h1>
+      <button class="nav-btn-add" id="btnOpenSheet" aria-label="新增活動">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <circle cx="11" cy="11" r="10" fill="var(--primary)"/>
+          <path d="M11 6v10M6 11h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Summary Strip -->
+    <div class="summary-strip" id="summaryStrip">
+      <div class="summary-item">
+        <span class="summary-val" id="homeCount">0</span>
+        <span class="summary-lbl">活動</span>
+      </div>
+      <div class="summary-sep"></div>
+      <div class="summary-item">
+        <span class="summary-val" id="homeTotal">NT$0</span>
+        <span class="summary-lbl">總花費</span>
+      </div>
+      <div class="summary-sep"></div>
+      <div class="summary-item">
+        <span class="summary-val" id="homeMonth">0</span>
+        <span class="summary-lbl">本月</span>
+      </div>
+    </div>
+
+    <!-- Filter Pills -->
+    <div class="filter-scroll">
+      <div class="filter-pills" id="filterPills">
+        <button class="pill active" data-type="all">全部</button>
+        <button class="pill" data-type="演唱會">🎤 演唱會</button>
+        <button class="pill" data-type="展覽">🖼 展覽</button>
+        <button class="pill" data-type="電影">🎬 電影</button>
+        <button class="pill" data-type="劇場">🎭 劇場</button>
+        <button class="pill" data-type="其他">✨ 其他</button>
+      </div>
+    </div>
+
+    <!-- Card List -->
+    <div class="card-list" id="cardList">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-emoji">🎨</div>
+        <p class="empty-title">還沒有記錄</p>
+        <p class="empty-sub">點右上角 <strong>+</strong> 開始紀錄</p>
+      </div>
+    </div>
+  </div><!-- /page-home -->
+
+  <!-- ══════ PAGE: STATS ══════ -->
+  <div class="page page-stats" id="pageStats">
+    <div class="nav-bar">
+      <h1 class="nav-title">統計</h1>
+    </div>
+    <div class="stats-scroll">
+
+      <!-- Big Number Cards -->
+      <div class="stats-grid">
+        <div class="stat-card accent-orange">
+          <span class="stat-card-val" id="stTotal">0</span>
+          <span class="stat-card-lbl">活動總數</span>
+        </div>
+        <div class="stat-card accent-pink">
+          <span class="stat-card-val" id="stSpend">NT$0</span>
+          <span class="stat-card-lbl">總花費</span>
+        </div>
+        <div class="stat-card accent-blue">
+          <span class="stat-card-val" id="stMonth">0</span>
+          <span class="stat-card-lbl">本月活動</span>
+        </div>
+        <div class="stat-card accent-green">
+          <span class="stat-card-val" id="stAvg">NT$0</span>
+          <span class="stat-card-lbl">平均票價</span>
+        </div>
+      </div>
+
+      <!-- Type Breakdown -->
+      <div class="stats-section">
+        <h2 class="stats-section-title">類型分佈</h2>
+        <div class="type-breakdown" id="typeBreakdown">
+          <p class="stats-empty">尚無資料</p>
+        </div>
+      </div>
+
+      <!-- Monthly Bar Chart -->
+      <div class="stats-section">
+        <h2 class="stats-section-title">近 6 個月活動數</h2>
+        <div class="bar-chart" id="barChart">
+          <p class="stats-empty">尚無資料</p>
+        </div>
+      </div>
+
+      <!-- Recent Activities -->
+      <div class="stats-section">
+        <h2 class="stats-section-title">最近活動</h2>
+        <div id="recentList" class="recent-list"></div>
+      </div>
+
+    </div>
+  </div><!-- /page-stats -->
+
+  <!-- ══════ PAGE: SETTINGS ══════ -->
+  <div class="page page-settings" id="pageSettings">
+    <div class="nav-bar">
+      <h1 class="nav-title">設定</h1>
+    </div>
+    <div class="settings-scroll">
+
+      <div class="settings-group">
+        <div class="settings-group-header">關於</div>
+        <div class="settings-cell">
+          <span class="settings-cell-label">App 名稱</span>
+          <span class="settings-cell-value">藝文紀錄</span>
+        </div>
+        <div class="settings-cell">
+          <span class="settings-cell-label">版本</span>
+          <span class="settings-cell-value">1.0.0</span>
+        </div>
+        <div class="settings-cell">
+          <span class="settings-cell-label">資料儲存</span>
+          <span class="settings-cell-value">本機 localStorage</span>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-header">資料管理</div>
+        <div class="settings-cell" id="exportBtn" style="cursor:pointer;">
+          <span class="settings-cell-label">匯出資料（JSON）</span>
+          <svg class="settings-chevron" width="8" height="13" viewBox="0 0 8 13"><path d="M1 1l6 5.5L1 12" stroke="var(--text-tertiary)" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+        </div>
+        <div class="settings-cell danger" id="clearBtn" style="cursor:pointer;">
+          <span class="settings-cell-label">清除所有資料</span>
+          <svg class="settings-chevron" width="8" height="13" viewBox="0 0 8 13"><path d="M1 1l6 5.5L1 12" stroke="#E24B4A" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-header">安裝 App</div>
+        <div class="settings-cell install-info">
+          <div class="install-steps">
+            <p class="install-os">📱 iPhone / iPad</p>
+            <p class="install-step">1. 點 Safari 下方「分享」圖示 <strong>⎙</strong></p>
+            <p class="install-step">2. 選「加入主畫面」</p>
+            <p class="install-step">3. 點右上角「加入」完成</p>
+          </div>
+        </div>
+        <div class="settings-cell install-info">
+          <div class="install-steps">
+            <p class="install-os">🤖 Android</p>
+            <p class="install-step">1. Chrome 右上角選單「⋮」</p>
+            <p class="install-step">2. 選「新增到主畫面」</p>
+            <p class="install-step">3. 確認安裝</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="settings-footer">藝文紀錄 v1.0.0 · Made with ❤️</p>
+    </div>
+  </div><!-- /page-settings -->
+
+  <!-- ══════ TAB BAR ══════ -->
+  <div class="tab-bar" id="tabBar">
+    <button class="tab-item active" data-page="pageHome">
+      <svg class="tab-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+        <path d="M9 21V12h6v9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+      </svg>
+      <span class="tab-label">首頁</span>
+    </button>
+    <button class="tab-item" data-page="pageStats">
+      <svg class="tab-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="13" width="4" height="8" rx="1" stroke="currentColor" stroke-width="1.7"/>
+        <rect x="10" y="8" width="4" height="13" rx="1" stroke="currentColor" stroke-width="1.7"/>
+        <rect x="17" y="4" width="4" height="17" rx="1" stroke="currentColor" stroke-width="1.7"/>
+      </svg>
+      <span class="tab-label">統計</span>
+    </button>
+    <button class="tab-item" data-page="pageSettings">
+      <svg class="tab-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/>
+        <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+      </svg>
+      <span class="tab-label">設定</span>
+    </button>
+  </div>
+
+  <!-- Tab Bar Safe Area -->
+  <div class="tab-bar-safe"></div>
+
+</div><!-- /app -->
+
+<!-- ══════════════════════════════════════
+     BOTTOM SHEET — Add Activity
+══════════════════════════════════════ -->
+<div class="sheet-backdrop" id="sheetBackdrop"></div>
+<div class="bottom-sheet" id="bottomSheet" role="dialog" aria-modal="true" aria-label="新增活動">
+  <div class="sheet-handle-area">
+    <div class="sheet-handle"></div>
+  </div>
+  <div class="sheet-header">
+    <button class="sheet-cancel" id="sheetCancel">取消</button>
+    <h2 class="sheet-title" id="sheetTitle">新增活動</h2>
+    <button class="sheet-save" id="sheetSave">儲存</button>
+  </div>
+  <div class="sheet-body">
+    <input type="hidden" id="editId" />
+
+    <div class="form-section">
+      <label class="form-label">活動名稱 <span class="req">*</span></label>
+      <input class="form-field" type="text" id="fTitle" placeholder="例：TWICE <THIS IS FOR> WORLD TOUR" autocomplete="off" />
+      <span class="form-err" id="errTitle">請輸入活動名稱</span>
+    </div>
+
+    <div class="form-section">
+      <label class="form-label">類型</label>
+      <div class="type-picker" id="typePicker">
+        <button class="type-btn active" data-val="演唱會">🎤 演唱會</button>
+        <button class="type-btn" data-val="展覽">🖼 展覽</button>
+        <button class="type-btn" data-val="電影">🎬 電影</button>
+        <button class="type-btn" data-val="劇場">🎭 劇場</button>
+        <button class="type-btn" data-val="其他">✨ 其他</button>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-section">
+        <label class="form-label">日期</label>
+        <input class="form-field" type="date" id="fDate" />
+      </div>
+      <div class="form-section">
+        <label class="form-label">時間</label>
+        <input class="form-field" type="time" id="fTime" />
+      </div>
+    </div>
+
+    <div class="form-section">
+      <label class="form-label">地點</label>
+      <input class="form-field" type="text" id="fLocation" placeholder="例：台北小巨蛋" autocomplete="off" />
+    </div>
+
+    <div class="form-section">
+      <label class="form-label">票價（NT$）</label>
+      <input class="form-field" type="number" id="fPrice" placeholder="0" min="0" inputmode="numeric" />
+    </div>
+
+    <div class="form-section">
+      <label class="form-label">備註</label>
+      <textarea class="form-field form-textarea" id="fNote" placeholder="心得、座位…" rows="3"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TOAST
+══════════════════════════════════════ -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════
+     CONFIRM DIALOG (native-feel)
+══════════════════════════════════════ -->
+<div class="ios-dialog-backdrop" id="dialogBackdrop">
+  <div class="ios-dialog" id="iosDialog">
+    <h3 class="dialog-title" id="dialogTitle"></h3>
+    <p class="dialog-msg" id="dialogMsg"></p>
+    <div class="dialog-actions" id="dialogActions"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
